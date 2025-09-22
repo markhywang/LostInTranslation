@@ -2,6 +2,8 @@ package translation;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import translation.JSONTranslator;
 import translation.CountryCodeConverter;
@@ -17,17 +19,36 @@ public class GUI {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            JPanel countryPanel = new JPanel();
-            JTextField countryField = new JTextField(10);
-            countryField.setText("can");
-            countryField.setEditable(false); // we only support the "can" country code for now
-            countryPanel.add(new JLabel("Country:"));
-            countryPanel.add(countryField);
+            JSONTranslator JSONTranslator = new JSONTranslator();
+            CountryCodeConverter countryCodeConverter = new CountryCodeConverter();
+            LanguageCodeConverter languageCodeConverter = new LanguageCodeConverter();
 
+            JPanel countryPanel = new JPanel();
+
+            List<String> languageCodes = JSONTranslator.getLanguageCodes();
+            String[] languageNames = new String[languageCodes.size()];
+            for (int i = 0; i < languageCodes.size(); i++) {
+                languageNames[i] = languageCodeConverter.fromLanguageCode(languageCodes.get(i));
+            }
+
+            List<String> countryCodes = JSONTranslator.getCountryCodes();
+            String[] countryNames = new String[countryCodes.size()];
+            for (int i = 0; i < countryCodes.size(); i++) {
+                countryNames[i] = countryCodeConverter.fromCountryCode(countryCodes.get(i));
+            }
+
+            JList<String> countryField = new JList<>(countryNames);
             JPanel languagePanel = new JPanel();
-            JTextField languageField = new JTextField(10);
-            languagePanel.add(new JLabel("Language:"));
-            languagePanel.add(languageField);
+            JComboBox<String> languageField = new JComboBox<>();
+            for (String languageName : languageNames) {
+                languageField.addItem(languageName);
+            }
+            JScrollPane countryScrollPane = new JScrollPane(countryField);
+            JScrollPane languageScrollPane = new JScrollPane(languageField);
+            countryScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            languagePanel.add(new JLabel("Country:"));
+            languagePanel.add(languageScrollPane, 1);
+            languagePanel.add(countryScrollPane, 1);
 
             JPanel buttonPanel = new JPanel();
             JButton submit = new JButton("Submit");
@@ -43,14 +64,14 @@ public class GUI {
             submit.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String language = languageField.getText();
-                    String country = countryField.getText();
+                    String language = String.valueOf(languageField.getSelectedItem());
+                    String country = String.valueOf(countryField.getSelectedValue());
 
                     // for now, just using our simple translator, but
                     // we'll need to use the real JSON version later.
                     Translator translator = new JSONTranslator();
 
-                    String result = translator.translate(country, language);
+                    String result = translator.translate(countryCodeConverter.fromCountry(country), languageCodeConverter.fromLanguage(language));
                     if (result == null) {
                         result = "no translation found!";
                     }

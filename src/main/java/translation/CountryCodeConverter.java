@@ -22,7 +22,7 @@ public class CountryCodeConverter {
      * in the resources folder.
      */
     public CountryCodeConverter() {
-        this("src\\main\\resources\\country-codes.txt");
+        this("country-codes.txt");
     }
 
     /**

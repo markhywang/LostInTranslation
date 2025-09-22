@@ -24,7 +24,7 @@ public class LanguageCodeConverter {
      * in the resources folder.
      */
     public LanguageCodeConverter() {
-        this("src\\main\\resources\\language-codes.txt");
+        this("language-codes.txt");
     }
 
     /**

@@ -28,7 +28,7 @@ public class JSONTranslator implements Translator {
      * Construct a JSONTranslator using data from the sample.json resources file.
      */
     public JSONTranslator() {
-        this("src\\main\\resources\\sample.json");
+        this("sample.json");
     }
 
     /**
