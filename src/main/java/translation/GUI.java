@@ -3,6 +3,10 @@ package translation;
 import javax.swing.*;
 import java.awt.event.*;
 
+import translation.JSONTranslator;
+import translation.CountryCodeConverter;
+import translation.LanguageCodeConverter;
+
 
 // TODO Task D: Update the GUI for the program to align with UI shown in the README example.
 //            Currently, the program only uses the CanadaTranslator and the user has
